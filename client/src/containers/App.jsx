@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { 
   changeView,
   checkedIfLoggedIn,
@@ -62,7 +63,7 @@ class App extends Component {
         <div className="navbar clear-fix">
           <div className="nav-left">
             <div className="nav-item nav-logo">
-            <i class="material-icons shiftly-icon">recent_actors</i>
+            <i className="material-icons shiftly-icon">recent_actors</i>
                Shiftly
             </div>
           </div>

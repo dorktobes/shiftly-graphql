@@ -3,15 +3,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import {
-  selectedWeekSelector,
-  scheduleDatesSelector,
-  getScheduleId,
-  makeScheduleArray,
-  makeNeededEmployeeCount,
-  getWeeksSchedule,
-} from '../containers/Dashboard/selectors';
-
 import EmployeeEditor from '../containers/EmployeeEditor.jsx';
 import ScheduleEditor from '../containers/ScheduleEditor.jsx';
 import ScheduleGenerator from '../containers/ScheduleGenerator.jsx';
@@ -135,11 +126,11 @@ function mapStateToProps(state) {
   }
 
   return {
-    selectedWeek: selectedWeekSelector(state),
-    selectedWeekScheduleId: getScheduleId(state),
-    weekHasActualSchedule: getWeeksSchedule(state).length,
-    weekHasAtLeastOneNeededEmployee: makeNeededEmployeeCount(state),
-    selectedWeekActualSchedule: makeScheduleArray(state),
+    selectedWeek: state.selectedWeek,
+    selectedWeekScheduleId: scheduleId,
+    weekHasActualSchedule: weekHasActualSchedule,
+    weekHasAtLeastOneNeededEmployee: weekHasAtLeastOneNeededEmployee,
+    selectedWeekActualSchedule: scheduleArr,
   }
 }
 
