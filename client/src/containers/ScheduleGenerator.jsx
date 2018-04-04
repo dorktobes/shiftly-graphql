@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { generateSchedule } from '../actions/index';
-import _ from 'underscore';
+import {
+  selectedWeekSelector,
+} from './selectors';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
@@ -47,6 +49,12 @@ class ScheduleGenerator extends React.Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    selectedWeek: selectedWeekSelector(state),
+  }
+};
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ generateSchedule: generateSchedule }, dispatch)
 }
@@ -58,4 +66,4 @@ ScheduleGenerator.propTypes = {
   weekHasAtLeastOneNeededEmployee: PropTypes.bool.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(ScheduleGenerator);
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleGenerator);

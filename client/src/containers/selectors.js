@@ -5,6 +5,7 @@ export const scheduleDatesSelector = state => state.scheduleDates;
 export const scheduleActualSelector = state => state.scheduleActual;
 export const usersSelector = state => state.users;
 export const neededEmployeesSelector = state => state.neededEmployees;
+export const dayPartsSelector = state => state.dayParts;
 
 export const getScheduleId = createSelector(
   selectedWeekSelector,
@@ -81,4 +82,36 @@ export const makeNeededEmployeeCount = createSelector(
         weekHasAtLeastOneNeededEmployee = true;
       }
   });
+
+export const makeScheduleNeeds = createSelector(
+  neededEmployeesSelector,
+  scheduleDatesSelector,
+  (neededEmployees, scheduleDates) => {
+    let scheduleNeeds;
+    if(neededEmployees && scheduleDates) {
+      scheduleNeeds = scheduleDates.reduce((acc, scheduleDate) => {
+        acc[scheduleDate.id] = {
+        id: scheduleDate.id,
+        monDate: scheduleDate.monday_dates,
+        neededEmployees: {},
+      };
+      return acc;
+      }, {});
+
+      neededEmployees.forEach((requirement) => {
+        scheduleNeeds[requirement.schedule_id].neededEmployees[requirement.day_part_id] = requirement.employees_needed;
+      });
+    }
+    return scheduleNeeds;
+  });
+
+export const makeDayPartsMap = createSelector(
+  dayPartsSelector,
+  (dayParts) => {
+    let dayPartsMap = {};
+    dayParts.forEach((dayPart) => {
+      dayPartsMap[dayPart.id] = dayPart.name;
+    });
+    return dayPartsMap;
+  })
 

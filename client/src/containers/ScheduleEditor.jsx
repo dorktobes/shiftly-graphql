@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { selectWeek } from '../actions/index';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+
+import {
+  selectedWeekSelector,
+  makeScheduleNeeds,
+  makeDayPartsMap,
+} from './selectors';
+import { selectWeek } from '../actions/index';
 import ScheduleTemplate from './ScheduleTemplate.jsx';
 
 class ScheduleEditor extends Component {
@@ -120,33 +126,10 @@ class ScheduleEditor extends Component {
 };
 
 const mapStateToProps = (state) => {
-  let scheduleNeeds;
-  const dayPartsMap = {};
-  if (state.neededEmployees && state.scheduleDates) {
-    scheduleNeeds = state.scheduleDates.reduce((acc, scheduleDate) => {
-      acc[scheduleDate.id] = {
-        id: scheduleDate.id,
-        monDate: scheduleDate.monday_dates,
-        neededEmployees: {},
-      };
-      return acc;
-    }, {});
-
-    state.neededEmployees.forEach((requirement) => {
-      scheduleNeeds[requirement.schedule_id].neededEmployees[requirement.day_part_id] = requirement.employees_needed;
-    });
-  }
-
-  if (state.dayParts) {
-    state.dayParts.forEach((dayPart) => {
-      dayPartsMap[dayPart.id] = dayPart.name;
-    });
-  }
-
   return {
-    dayPartsMap,
-    scheduleNeeds,
-    selectedWeek: state.selectedWeek
+    dayPartsMap: makeDayPartsMap(state),
+    scheduleNeeds: makeScheduleNeeds(state),
+    selectedWeek: selectedWeekSelector(state),
   };
 };
 

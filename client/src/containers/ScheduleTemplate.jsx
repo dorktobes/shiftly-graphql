@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { updateNeededEmployees } from '../actions/index';
 import { createScheduleTemplate } from '../actions/index';
 import { createScheduleDate } from '../actions/index';
+import { selectedWeekSelector } from './selectors';
 import _ from 'underscore';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -166,7 +167,7 @@ class ScheduleTemplate extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    selectedWeek: state.selectedWeek,
+    selectedWeek: selectedWeekSelector(state),
   };
 }
 
