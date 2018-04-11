@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import EmployeeAvailability from './EmployeeAvailability.jsx';
-import EmployeeRoster from '../components/EmployeeRoster.jsx';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import {
+  makeDayPartsMap,
+  makeEmployeesMap,
+} from './selectors';
+import EmployeeAvailability from './EmployeeAvailability.jsx';
+import EmployeeRoster from '../components/EmployeeRoster.jsx';
 
 class EmployeeEditor extends Component {
   constructor(props) {
@@ -33,40 +38,16 @@ class EmployeeEditor extends Component {
 };
 
 const mapStateToProps = (state) => {
-  let employees;
-  const dayPartsMap = {};
-  if(state.users && state.employeeAvailabilities) {
-    employees = state.users.filter((user) => {
-      return user.role === 'employee';
-    }).reduce((acc, employee) => {
-      acc[employee.id] = {
-        id: employee.id,
-        name: employee.name,
-        availabilities: {},
-      };
-      return acc;
-    }, {});
-  
-    state.employeeAvailabilities.forEach((availability) => {
-      employees[availability.user_id].availabilities[availability.day_part_id] = availability.is_available;
-    });
-  }
-  if(state.dayParts) {
-    state.dayParts.forEach((dayPart) => {
-      dayPartsMap[dayPart.id] = dayPart.name
-    })
-  }
-  
   return {
-    dayPartsMap,
-    employees,
+    dayPartsMap: makeDayPartsMap(state),
+    employees: makeEmployeesMap(state),
   };
   
 };
 
 EmployeeEditor.propTypes = {
-  dayPartsMap: PropTypes.arrayOf(PropTypes.object).isRequired,
-  employees: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dayPartsMap: PropTypes.object.isRequired,
+  employees: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(EmployeeEditor);

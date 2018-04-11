@@ -6,6 +6,7 @@ export const scheduleActualSelector = state => state.scheduleActual;
 export const usersSelector = state => state.users;
 export const neededEmployeesSelector = state => state.neededEmployees;
 export const dayPartsSelector = state => state.dayParts;
+export const employeeAvailabilitySelector = state => state.employeeAvailabilities;
 
 export const getScheduleId = createSelector(
   selectedWeekSelector,
@@ -114,4 +115,29 @@ export const makeDayPartsMap = createSelector(
     });
     return dayPartsMap;
   })
+
+export const makeEmployeesMap = createSelector(
+  dayPartsSelector,
+  usersSelector,
+  employeeAvailabilitySelector,
+  (dayParts, users, employeeAvailabilities) => {
+    let employees;
+    if(users && employeeAvailabilities) {
+      employees = users.filter((user) => {
+        return user.role === 'employee';
+      }).reduce((acc, employee) => {
+        acc[employee.id] = {
+          id: employee.id,
+          name: employee.name,
+          availabilities: {},
+        };
+        return acc;
+      }, {});
+    
+      employeeAvailabilities.forEach((availability) => {
+        employees[availability.user_id].availabilities[availability.day_part_id] = availability.is_available;
+      });
+    }
+    return employees || null;
+  });
 
