@@ -32,13 +32,13 @@ module.exports = (sequelize) => {
 	}, {underscored: true, timestamps: false});
 
 	const db = {
-		User: User,
-		Schedule: Schedule,
-		Employee_Availability: Employee_Availability,
-		Actual_Schedule: Actual_Schedule,
-		Needed_Employee: Needed_Employee,
-		Day_Part: Day_Part,
-		Session: Session,
+		User,
+		Schedule,
+		Employee_Availability,
+		Actual_Schedule,
+		Needed_Employee,
+		Day_Part,
+		Session,
 	};
 
 	return db;
