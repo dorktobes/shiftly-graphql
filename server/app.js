@@ -1,7 +1,10 @@
 const express = require('express');
-const utils = require('../helpers/index.js');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const expressGraphQL = require('express-graphql');
+
+const schema = require('./schema/schema');
+const utils = require('../helpers/index.js');
 const generateSchedule = require('../helpers/algo.js').generateSchedule;
 
 const app = express();
@@ -12,6 +15,11 @@ app.use(cookieParser());
 app.use(utils.checkSession);
 
 app.use(express.static(__dirname + '/../client/dist/compiled'));
+
+app.use('/graphql', expressGraphQL({
+  schema,
+  graphiql: true
+}));
 
 app.get('/users', utils.getAllUsers, (req, res) => {
   res.json(req.users);
