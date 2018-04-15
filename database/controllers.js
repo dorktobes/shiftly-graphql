@@ -32,9 +32,22 @@ const getAllEmployeeAvailabilities = () => {
   return db.Employee_Availability.findAll({});
 };
 
+const findEmployeeAvailabilites = (id) => {
+  return db.Employee_Availability.findAll({ where: { user_id: id } });
+};
+
 const getAllDayParts = () => {
   return db.Day_Part.findAll({});
 };
+
+const findDayParts = (id) => {
+  return db.Day_Part.findAll({ where: { id } })
+  .then((result) => {
+    console.log('IN CONTROLLERS', result);
+    return result[0].name;
+  });
+};
+
 
 const getAllActualSchedules = () => {
   return db.Actual_Schedule.findAll({});
@@ -145,7 +158,9 @@ const createScheduleTemplate = (req, res, next) => {
 };
 
 module.exports = {
+  findEmployeeAvailabilites,
   findUser,
   findAllEmployees,
+  findDayParts,
 };
 

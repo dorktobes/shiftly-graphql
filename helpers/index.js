@@ -189,6 +189,7 @@ const checkSession = (req, res, next) => {
       .then((user) => {
         let obj =  { session: session[0].dataValues.session }; 
         if (user.length) {
+          obj.id = user[0].dataValues.id;
           obj.user = user[0].dataValues.name;
           obj.role = user[0].dataValues.role;
         }

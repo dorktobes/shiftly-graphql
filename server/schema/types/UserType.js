@@ -6,7 +6,11 @@ const {
   GraphQLList,
 } = graphql;
 
-const { findAllEmployees } = require('../../../database/controllers');
+const AvailibilityType = require('./AvailibilityType');
+const {
+  findAllEmployees,
+  findEmployeeAvailabilites,
+} = require('../../../database/controllers');
 
 const UserType = new GraphQLObjectType({
   name: 'UserType',
@@ -14,6 +18,12 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     role: { type: GraphQLString },
+    availabilities: {
+      type: new GraphQLList(AvailibilityType),
+      resolve(parentValue, args) {
+        return findEmployeeAvailabilites(parentValue.id);
+      }
+    },
     employees: {
       type: new GraphQLList(UserType),
       resolve(parentValue, args) {

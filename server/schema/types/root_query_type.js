@@ -15,7 +15,13 @@ const RootQueryType = new GraphQLObjectType({
       args: { id: { type: new GraphQLNonNull(GraphQLID) }},
       resolve(parentValue, { id }, req) {
         return findUser(id);
-      }
+      },
+    },
+    CurrentUser: {
+      type: UserType,
+      resolve(parentValue, args, req) {
+        return findUser(req.session.id);
+      },
     },
   },
 });
