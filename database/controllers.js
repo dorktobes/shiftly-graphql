@@ -1,4 +1,4 @@
-const db = require('../database');
+const db = require('.');
 const { passHash } = require('../helpers');
 
 const getAllUsers = () => {
@@ -6,8 +6,18 @@ const getAllUsers = () => {
 };
 
 const findUser = (id) => {
-  return db.User.findAll({ id });
+  return db.User.findAll({ where: { id }})
+  .then((data) => {
+    return data[0];
+  });
 };
+
+const findAllEmployees = () => {
+  return db.User.findAll({ where: { role: 'employee' }})
+  .then((data) => {
+    return data;
+  });
+}
 
 const getAllScheduleDates = () => {
   return db.Schedule.findAll({});
@@ -133,3 +143,9 @@ const createScheduleTemplate = (req, res, next) => {
     res.end(err);
   });
 };
+
+module.exports = {
+  findUser,
+  findAllEmployees,
+};
+
