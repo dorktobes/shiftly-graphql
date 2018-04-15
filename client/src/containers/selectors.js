@@ -77,12 +77,11 @@ export const makeNeededEmployeeCount = createSelector(
     return neededEmployees.filter((el) => {
         return el.schedule_id === scheduleId;
       }).reduce((acc, el) => {
+        console.log(acc);
         return acc + el.employees_needed;
-      }, 0);
-      if (countOfNeededEmployees > 0) {
-        weekHasAtLeastOneNeededEmployee = true;
-      }
-  });
+      }, 0);  
+    }
+  );
 
 export const makeScheduleNeeds = createSelector(
   neededEmployeesSelector,
