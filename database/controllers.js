@@ -1,78 +1,47 @@
 const db = require('../database');
+const { passHash } = require('../helpers');
 
-const getAllUsers = (req, res, next) => {
-  db.User.findAll({})
-    .then((allUsers) => {
-      req.users = allUsers;
-      next();
-    }).catch((err) => {
-      res.status(500).send('Error getting users');
-    });
+const getAllUsers = () => {
+  return db.User.findAll({});
 };
 
-const getAllScheduleDates = (req, res, next) => {
-  db.Schedule.findAll({})
-    .then((allScheduleDates) => {
-      req.scheduleDates = allScheduleDates;
-      next();
-    }).catch((err) => {
-      res.status(500).send('Error getting users');
-    });
+const findUser = (id) => {
+  return db.User.findAll({ id });
 };
 
-const getAllNeededEmployees = (req, res, next) => {
-  db.Needed_Employee.findAll({})
-    .then((allNeededEmployees) => {
-      req.neededEmployees = allNeededEmployees;
-      next();
-    }).catch((err) => {
-      res.status(500).send('Error getting neededEmployees');
-    });
+const getAllScheduleDates = () => {
+  return db.Schedule.findAll({});
+};
+
+const getAllNeededEmployees = () => {
+  return db.Needed_Employee.findAll({});
 };
 
 
-const getAllEmployeeAvailabilities = (req, res, next) => {
-  db.Employee_Availability.findAll({})
-    .then((allEmployeeAvailabilities) => {
-      req.employeeAvailabilities = allEmployeeAvailabilities;
-      next();
-    }).catch((err) => {
-      res.status(500).send('Error getting users');
-    });
+const getAllEmployeeAvailabilities = () => {
+  return db.Employee_Availability.findAll({});
 };
 
-const getAllDayParts = (req, res, next) => {
-  db.Day_Part.findAll({})
-    .then((allDayParts) => {
-      req.dayParts = allDayParts;
-      next();
-    }).catch((err) => {
-      res.status(500).send('Error getting users');
-    });
+const getAllDayParts = () => {
+  return db.Day_Part.findAll({});
 };
 
-const getAllActualSchedules = (req, res, next) => {
-  db.Actual_Schedule.findAll({})
-  .then((schedules) => {
-    req.actual_schedules = schedules;
-    next();
-  }).catch((err) => {
-    res.status(500).send('Error getting schedules');
-  })
+const getAllActualSchedules = () => {
+  return db.Actual_Schedule.findAll({});
 };
 
-const addUser = (req, res, next) => {
-  db.User.create({
-    name: req.body.username,
-    role: 'employee',
-    password: passHash(req.body.password),
-  })
-    .then((user) => {
-      req.user = user;
-      next();
-    }).catch((err) => {
-      res.json({ flashMessage: 'username already exists' });
+const addUser = ({ username, password }) => {
+  return new Promise((resolve, reject) => {
+    db.User.create({
+      name: username,
+      role: 'employee',
+      password: passHash(password),
+    })
+    .then(resolve)
+    .catch((err) => {
+       reject({ flashMessage: 'username already exists' });
     });
+  });
 };
 
 const addEmployeeAvailability = (req, res, next) => {
