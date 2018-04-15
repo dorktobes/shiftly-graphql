@@ -53,6 +53,12 @@ const getAllActualSchedules = () => {
   return db.Actual_Schedule.findAll({});
 };
 
+const findActualSchedule = (id) => {
+  return db.Actual_Schedule.findAll({
+    where: { schedule_id: id }
+  });
+};
+
 const addUser = ({ username, password }) => {
   return new Promise((resolve, reject) => {
     db.User.create({
@@ -162,5 +168,6 @@ module.exports = {
   findUser,
   findAllEmployees,
   findDayParts,
+  findActualSchedule,
 };
 

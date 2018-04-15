@@ -5,6 +5,7 @@ const {
   GraphQLNonNull,
  } = graphql;
 const UserType = require('./UserType');
+const ScheduleInfoType = require('./ScheduleInfoType');
 const { findUser } = require('../../../database/controllers');
 
 const RootQueryType = new GraphQLObjectType({
@@ -23,6 +24,13 @@ const RootQueryType = new GraphQLObjectType({
         return findUser(req.session.id);
       },
     },
+    ScheduleInfo: {
+      type: ScheduleInfoType,
+      args: { id: { type: new GraphQLNonNull(GraphQLID) }},
+      resolve(parentValue, args) {
+        return {id: 7};
+      },
+    }
   },
 });
 
