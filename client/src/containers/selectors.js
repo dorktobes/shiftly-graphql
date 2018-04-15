@@ -68,16 +68,22 @@ export const makeScheduleArray = createSelector(
   });
 
 export const makeNeededEmployeeCount = createSelector(
+  scheduleDatesSelector,
   selectedWeekSelector,
   neededEmployeesSelector,
-  (scheduleId, neededEmployees) => {
+  (datesArray, selectedWeek, neededEmployees) => {
+    const scheduleId = datesArray.reduce((acc, el) => {
+      if( el.monday_dates.slice(0,10) === selectedWeek) {
+        return el.id;
+      }
+      return acc;
+    }, null);
     if(!neededEmployees) {
       return 0;
     }
     return neededEmployees.filter((el) => {
         return el.schedule_id === scheduleId;
       }).reduce((acc, el) => {
-        console.log(acc);
         return acc + el.employees_needed;
       }, 0);  
     }

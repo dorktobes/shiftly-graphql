@@ -68,12 +68,11 @@ class Dashboard extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(makeNeededEmployeeCount(state));
   return {
     selectedWeek: selectedWeekSelector(state),
     selectedWeekScheduleId: getScheduleId(state),
     weekHasActualSchedule: getWeeksSchedule(state).length > 0,
-    weekHasAtLeastOneNeededEmployee: true,// makeNeededEmployeeCount(state) > 0,
+    weekHasAtLeastOneNeededEmployee: makeNeededEmployeeCount(state) > 0,
     selectedWeekActualSchedule: makeScheduleArray(state),
   }
 }
