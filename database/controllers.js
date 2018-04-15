@@ -27,6 +27,14 @@ const getAllNeededEmployees = () => {
   return db.Needed_Employee.findAll({});
 };
 
+const findNeededEmployees = (id) => {
+  return db.Needed_Employee.findAll({
+    where: {
+      schedule_id: id,
+    }
+  });
+}
+
 
 const getAllEmployeeAvailabilities = () => {
   return db.Employee_Availability.findAll({});
@@ -169,5 +177,7 @@ module.exports = {
   findAllEmployees,
   findDayParts,
   findActualSchedule,
+  findNeededEmployees,
+  getAllScheduleDates,
 };
 

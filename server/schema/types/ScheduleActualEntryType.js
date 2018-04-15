@@ -25,12 +25,6 @@ const ScheduleActualEntryType = new GraphQLObjectType({
         return findDayParts(parentValue.day_part_id);
       },
     },
-    scheduleStartDate: {
-      type: GraphQLString,
-      resolve(parentValue, args) {
-
-      },
-    },
   }
 
 });

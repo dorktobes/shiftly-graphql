@@ -3,10 +3,14 @@ const {
   GraphQLObjectType,
   GraphQLID,
   GraphQLNonNull,
+  GraphQLList,
  } = graphql;
 const UserType = require('./UserType');
 const ScheduleInfoType = require('./ScheduleInfoType');
-const { findUser } = require('../../../database/controllers');
+const {
+  findUser,
+  getAllScheduleDates,
+} = require('../../../database/controllers');
 
 const RootQueryType = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -28,9 +32,15 @@ const RootQueryType = new GraphQLObjectType({
       type: ScheduleInfoType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) }},
       resolve(parentValue, args) {
-        return {id: 7};
+        return {id: args.id};
       },
-    }
+    },
+    Schedules: {
+      type: new GraphQLList(ScheduleInfoType),
+      resolve(parentValue, args) {
+        return getAllScheduleDates();
+      }
+    },
   },
 });
 

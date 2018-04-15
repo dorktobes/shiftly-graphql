@@ -5,9 +5,13 @@ const {
   GraphQLList,
 } = graphql;
 
-const { findActualSchedule } = require('../../../database/controllers');
+const {
+  findActualSchedule,
+  findNeededEmployees,
+} = require('../../../database/controllers');
 
 const ScheduleActualEntryType = require('./ScheduleActualEntryType');
+const NeededEmployeesEntryType = require('./NeededEmployeesEntryType');
 
 const ScheduleInfoType = new GraphQLObjectType({
   name: 'ScheduleInfoType',
@@ -16,9 +20,18 @@ const ScheduleInfoType = new GraphQLObjectType({
       type: new GraphQLList(ScheduleActualEntryType),
       resolve(parentValue, args) {
         console.log('in ScheduleInfoType', parentValue, args)
-        return findActualSchedule(7);
+        return findActualSchedule(parentValue.id);
       }
-    }
+    },
+    neededEmployees: {
+      type: new GraphQLList(NeededEmployeesEntryType),
+      resolve(parentValue, args) {
+        return findNeededEmployees(parentValue.id);
+      },
+    },
+    monday_dates: {
+      type: GraphQLString,
+    },
   },
 });
 
