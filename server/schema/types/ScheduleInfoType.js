@@ -3,6 +3,7 @@ const {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
+  GraphQLID,
 } = graphql;
 
 const {
@@ -16,10 +17,12 @@ const NeededEmployeesEntryType = require('./NeededEmployeesEntryType');
 const ScheduleInfoType = new GraphQLObjectType({
   name: 'ScheduleInfoType',
   fields: {
+    id: {
+      type: GraphQLID,
+    },
     scheduleActual: {
       type: new GraphQLList(ScheduleActualEntryType),
       resolve(parentValue, args) {
-        console.log('in ScheduleInfoType', parentValue, args)
         return findActualSchedule(parentValue.id);
       }
     },
@@ -29,8 +32,12 @@ const ScheduleInfoType = new GraphQLObjectType({
         return findNeededEmployees(parentValue.id);
       },
     },
-    monday_dates: {
+    mondayDates: {
       type: GraphQLString,
+      resolve(parentValue) {
+        // send dates over in the format the client expects
+        return JSON.stringify(parentValue.monday_dates).slice(1,11);
+      },
     },
   },
 });

@@ -51,7 +51,6 @@ const getAllDayParts = () => {
 const findDayParts = (id) => {
   return db.Day_Part.findAll({ where: { id } })
   .then((result) => {
-    console.log('IN CONTROLLERS', result);
     return result[0].name;
   });
 };

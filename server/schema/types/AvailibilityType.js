@@ -14,7 +14,6 @@ const AvailibilityType = new GraphQLObjectType({
     dayPart: {
       type: GraphQLString,
       resolve(parentValue, args) {
-        console.log('PV', parentValue);
         return findDayParts(parentValue.day_part_id);
       }
     }
