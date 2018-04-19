@@ -279,6 +279,27 @@ const createUser = (req, res, next) => {
   })
 };
 
+const createUserNonMiddleware = ({ name, password }, req, res, next) => {
+  return new Promise((resolve, reject) => {
+    db.User.create({
+      name,
+      role: 'manager',
+      password: passHash(password)
+    }).then((data) => {
+      req.session = newSession(req, res);
+      req.session.user = name;
+      req.session.role =data.dataValues.role;
+      db.Sessions.create({session: req.session.session, user_id: data.dataValues.id})
+      .then(() => {
+        resolve(data.dataValues.id);
+      })
+    }).catch((err) => {
+      reject(`username "${req.body.creds.username}" already exists`);
+    })
+
+  });
+};
+
 const redirectIfLoggedIn = (req, res, next) => {
   if (!req.session.user) {
     res.send();
@@ -352,5 +373,6 @@ module.exports = {
   createScheduleDate:createScheduleDate,
   createScheduleTemplate: createScheduleTemplate,
   authenticateNonMiddleware,
-  destroySessionNonMiddleware
+  destroySessionNonMiddleware,
+  createUserNonMiddleware,
 };

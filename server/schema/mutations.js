@@ -8,6 +8,7 @@ const {
 const {
   authenticateNonMiddleware,
   destroySessionNonMiddleware,
+  createUserNonMiddleware,
 } = require('../../helpers');
 const {
   findUser,
@@ -60,8 +61,9 @@ const mutation = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLString),
         },
       },
-      resolve(parentValue, args, req) {
-
+      resolve(parentValue, args, { req, res }) {
+        return createUserNonMiddleware(args, req, res)
+        .then((id) => findUser(id));
       },
     },
     updateEmployeeAvailability: {
