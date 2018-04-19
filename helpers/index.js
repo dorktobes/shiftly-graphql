@@ -322,6 +322,15 @@ const destroySession = (req, res, next) => {
   })
 };
 
+const destroySessionNonMiddleware = (req, res) => {
+  console.log('destroying session');
+  return db.Sessions.destroy({ where:{session: req.session.session} })
+  .then(() => {
+    console.log('creating new session');
+    req.session = newSession(req, res);
+  })
+};
+
 
 module.exports = {
   destroySession: destroySession,
@@ -343,4 +352,5 @@ module.exports = {
   createScheduleDate:createScheduleDate,
   createScheduleTemplate: createScheduleTemplate,
   authenticateNonMiddleware,
+  destroySessionNonMiddleware
 };

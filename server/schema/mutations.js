@@ -7,7 +7,11 @@ const {
 } = graphql;
 const {
   authenticateNonMiddleware,
+  destroySessionNonMiddleware,
 } = require('../../helpers');
+const {
+  findUser,
+} = require('../../database/controllers');
 
 const UserType = require('./types/UserType');
 
@@ -37,7 +41,12 @@ const mutation = new GraphQLObjectType({
     logout: {
       type: UserType,
       args: {},
-      resolve(parentValue, args, req) {
+      resolve(parentValue, args, { req, res }) {
+        const userID = req.session.id;
+        return destroySessionNonMiddleware(req, res)
+        .then(() => {
+          return findUser(userID);
+        });
 
       },
     },
