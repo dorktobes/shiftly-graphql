@@ -236,6 +236,31 @@ const authenticate = (req, res, next) => {
   })
 };
 
+const authenticateNonMiddleware = ({ username, password}, req, res) => {
+  //get user info from user db;
+  return new Promise((resolve, reject) => {
+    db.User.findAll({ where: {name: username} })
+    .then((user) => {
+      if (user.length === 0) {
+        reject('incorrect username or password');
+        return;
+      }
+      user = user[0].dataValues;
+      if (passHash(password) === user.password) {
+        req.session = newSession(req, res);
+        req.session.user = user.name;
+        req.session.role = user.role;
+        db.Sessions.create({session: req.session.session, user_id: user.id})
+        .then(() => {
+          resolve(user);
+        })
+      } else {
+        reject('incorrect username or password');
+      }
+    })
+  })
+};
+
 const createUser = (req, res, next) => {
   db.User.create({
     name: req.body.creds.username,
@@ -317,4 +342,5 @@ module.exports = {
   updateNeededEmployees: updateNeededEmployees,
   createScheduleDate:createScheduleDate,
   createScheduleTemplate: createScheduleTemplate,
+  authenticateNonMiddleware,
 };

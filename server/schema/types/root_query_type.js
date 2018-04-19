@@ -24,8 +24,8 @@ const RootQueryType = new GraphQLObjectType({
     },
     CurrentUser: {
       type: UserType,
-      resolve(parentValue, args, req) {
-        return findUser(req.session.id);
+      resolve(parentValue, args, context) {
+        return findUser(context.req.session.id);
       },
     },
     ScheduleInfo: {

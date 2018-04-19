@@ -16,10 +16,11 @@ app.use(utils.checkSession);
 
 app.use(express.static(__dirname + '/../client/dist/compiled'));
 
-app.use('/graphql', expressGraphQL({
+app.use('/graphql', expressGraphQL((req, res) => ({
   schema,
-  graphiql: true
-}));
+  graphiql: true,
+  context: { req, res },
+})));
 
 app.get('/users', utils.getAllUsers, (req, res) => {
   res.json(req.users);

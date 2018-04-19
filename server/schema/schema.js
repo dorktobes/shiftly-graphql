@@ -6,5 +6,5 @@ const mutation = require('./mutations');
 
 module.exports = new GraphQLSchema({
   query: RootQueryType,
-  // mutation,
+  mutation,
 });
