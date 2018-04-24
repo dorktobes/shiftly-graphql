@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLID,
   GraphQLList,
+  GraphQLBoolean,
 } = graphql;
 
 const { findDayParts } = require('../../../database/controllers');
@@ -15,8 +16,14 @@ const AvailibilityType = new GraphQLObjectType({
       type: GraphQLString,
       resolve(parentValue, args) {
         return findDayParts(parentValue.day_part_id);
+      },
+    },
+    isAvailable: {
+      type: GraphQLBoolean,
+      resolve(parentValue) {
+        return parentValue.is_available;
       }
-    }
+    },
   }
 });
 

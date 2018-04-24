@@ -4,11 +4,13 @@ const {
   GraphQLString,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
 } = graphql;
 const {
   authenticateNonMiddleware,
   destroySessionNonMiddleware,
   createUserNonMiddleware,
+  updateEmployeeAvailabilityNonMiddleware,
 } = require('../../helpers');
 const {
   findUser,
@@ -67,14 +69,18 @@ const mutation = new GraphQLObjectType({
       },
     },
     updateEmployeeAvailability: {
-      type: GraphQLString,
+      type: UserType,
       args: {
-        id: {
-          type: new GraphQLNonNull(GraphQLID),
+        newAvails: {
+          type: new GraphQLNonNull(GraphQLString),
         },
       },
-      resolve(parentValue, args, req) {
-
+      resolve(parentValue, args, { req }) {
+        console.log(JSON.parse(args.newAvails));
+        return updateEmployeeAvailabilityNonMiddleware(JSON.parse(args.newAvails))
+        .then((id) => {
+          return findUser(id);
+        })
       },
     },
     addEmployee: {

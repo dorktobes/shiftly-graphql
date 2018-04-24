@@ -104,6 +104,7 @@ const addEmployeeAvailability = (req, res, next) => {
 
 // Takes new employeeAvailabilities and updates them in the database
 const updateEmployeeAvailability = (req, res, next) => {
+  console.log(req.body);
   return Promise.each(req.body.employeeAvailabilities, (employeeAvail) => {
     const updates = { is_available: employeeAvail.is_available };
     const conditions = {
@@ -117,6 +118,22 @@ const updateEmployeeAvailability = (req, res, next) => {
     req.empoloyeeAvailabilities = updatedAvailabilities;
     next();
   });
+};
+
+const updateEmployeeAvailabilityNonMiddleware = ({ employeeAvailabilities }) => {
+  
+  return Promise.each(employeeAvailabilities, ({ is_available, user_id, day_part_id }) => {
+    const updates = { is_available };
+    const conditions = {
+      where: {
+        user_id,
+        day_part_id,
+      },
+    };
+    return db.Employee_Availability.update(updates, conditions);
+  }).then((updatedAvailabilities) => {
+    return employeeAvailabilities[0].user_id
+  })
 };
 
 const updateNeededEmployees = (req, res, next) => {
@@ -375,4 +392,5 @@ module.exports = {
   authenticateNonMiddleware,
   destroySessionNonMiddleware,
   createUserNonMiddleware,
+  updateEmployeeAvailabilityNonMiddleware,
 };
