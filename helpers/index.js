@@ -1,7 +1,9 @@
 const moment = require('moment');
-const db = require('../database');
 const Promise = require('bluebird');
 const crypto = require('crypto');
+
+const db = require('../database');
+// const { getAllDayParts } = require('../database/controllers');
 
 const getAllUsers = (req, res, next) => {
   db.User.findAll({})
@@ -85,7 +87,7 @@ const addUser = (req, res, next) => {
 };
 
 const addUserNonMiddleware = ({ username, password }) => {
-  db.User.create({
+  return db.User.create({
     name: username,
     role: 'employee',
     password: passHash(password),
@@ -115,6 +117,44 @@ const addEmployeeAvailability = (req, res, next) => {
     }).catch((err) => {
       res.status(500).send(`error adding availability for user ${parsedUserId}: ${err}`);
     });
+};
+
+const addEmployeeAvailabilityNonMiddleware = (empId) => {
+
+  return new Promise((resolve, reject) => {
+
+    db.Day_Part.findAll({})
+    .then((dayParts) => {
+
+      const parsedDayPartsKeys = Object.keys(dayParts);
+      const employeeAvailability = {};
+      Promise.each(parsedDayPartsKeys, (key) => {
+
+        const id = JSON.parse(key) + 1;
+        return db.Employee_Availability.create({
+          is_available: true,
+          user_id: empId,
+          day_part_id: id,
+        })
+        .then((availability) => {
+
+          employeeAvailability[key] = availability;
+        })
+        .catch((err) => {
+
+          reject(err);
+        });
+      })
+      .then(() => {
+
+        resolve(employeeAvailability)
+      }).catch((err) => {
+
+        reject(err);
+      });
+    })
+    
+  })
 };
 
 // Takes new employeeAvailabilities and updates them in the database
@@ -170,6 +210,18 @@ const updateNeededEmployees = (req, res, next) => {
 };
 
 const createScheduleDate = (req, res, next) => {
+  db.Schedule.create({
+    monday_dates: moment(req.body.scheduleTemplate[0].monday_dates)
+  }).then((scheduleDate)=> {
+    req.scheduleTemplate = {};
+    req.scheduleTemplate.monday_date = scheduleDate;
+    next();
+  }).catch((err) => {
+    res.status(500).send('Error creating new schedule date');
+  });
+};
+
+const createScheduleDateNonMiddleware = () => {
   db.Schedule.create({
     monday_dates: moment(req.body.scheduleTemplate[0].monday_dates)
   }).then((scheduleDate)=> {
@@ -404,8 +456,11 @@ module.exports = {
   updateNeededEmployees: updateNeededEmployees,
   createScheduleDate:createScheduleDate,
   createScheduleTemplate: createScheduleTemplate,
+
   authenticateNonMiddleware,
   destroySessionNonMiddleware,
   createUserNonMiddleware,
   updateEmployeeAvailabilityNonMiddleware,
+  addUserNonMiddleware,
+  addEmployeeAvailabilityNonMiddleware,
 };
