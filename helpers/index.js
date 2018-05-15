@@ -209,6 +209,19 @@ const updateNeededEmployees = (req, res, next) => {
   });
 };
 
+const updateNeededEmployeesNonMiddleware = (newNeeds) => {
+  return Promise.each(newNeeds, (shift) => {
+    const updates = { employees_needed: shift.employees_needed };
+    const conditions = {
+      where: {
+        schedule_id: shift.schedule_id,
+        day_part_id: shift.day_part_id,
+      },
+    };
+    return db.Needed_Employee.update(updates, conditions);
+  });
+};
+
 const createScheduleDate = (req, res, next) => {
   db.Schedule.create({
     monday_dates: moment(req.body.scheduleTemplate[0].monday_dates)
@@ -463,4 +476,5 @@ module.exports = {
   updateEmployeeAvailabilityNonMiddleware,
   addUserNonMiddleware,
   addEmployeeAvailabilityNonMiddleware,
+  updateNeededEmployeesNonMiddleware,
 };
