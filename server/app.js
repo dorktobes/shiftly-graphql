@@ -62,7 +62,7 @@ app.post('/needed_employees', utils.createScheduleDate, utils.createScheduleTemp
   res.json(req.scheduleTemplate);
 });
 
-app.post('/generate_schedule', (req, res) => { 
+app.post('/generate_schedule', (req, res) => {
   generateSchedule(new Date(req.body.mondayDate))
     .then((schedule) => {
       res.json(schedule);

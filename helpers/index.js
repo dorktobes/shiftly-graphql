@@ -53,6 +53,13 @@ const getAllDayParts = (req, res, next) => {
     });
 };
 
+const getAllDayPartsNonMiddleware = () => {
+  db.Day_Part.findAll({})
+    .then((allDayParts) => {
+      return allDayParts;
+    });
+};
+
 const getAllActualSchedules = (req, res, next) => {
   db.Actual_Schedule.findAll({})
   .then((schedules) => {
@@ -75,6 +82,14 @@ const addUser = (req, res, next) => {
     }).catch((err) => {
       res.json({ flashMessage: 'username already exists' });
     });
+};
+
+const addUserNonMiddleware = ({ username, password }) => {
+  db.User.create({
+    name: username,
+    role: 'employee',
+    password: passHash(password),
+  });
 };
 
 const addEmployeeAvailability = (req, res, next) => {

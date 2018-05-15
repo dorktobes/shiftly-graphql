@@ -148,27 +148,27 @@ const reformatScheduleObj = (actual_schedule, schedule_id) => {
 }
 
 const generateSchedule = (weekStart) => {
-  return findAllEmployeeAvailability()
-    .then((availObj) => {
-      let avail = availObj;
-      return templateParser(weekStart)
-        .then((temp) => {
-          let template = temp[0];
-          let schedule_id = temp[1];
+  findAllEmployeeAvailability()
+  .then((availObj) => {
+    let avail = availObj;
+    return templateParser(weekStart)
+    .then((temp) => {
+      let template = temp[0];
+      let schedule_id = temp[1];
 
-          let actual_schedule = scheduleGenerator(avail, template);
-          let reformattedSchedule = reformatScheduleObj(actual_schedule, schedule_id);
-          return db.Actual_Schedule.destroy({ where: {schedule_id: schedule_id} })
-            .then(() => {
-              return Promise.each(reformattedSchedule, (scheduleObj) => {
-                return db.Actual_Schedule.create(scheduleObj);
-              })
-              .then(() => {
-                return reformattedSchedule;
-              });
-            })
+      let actual_schedule = scheduleGenerator(avail, template);
+      let reformattedSchedule = reformatScheduleObj(actual_schedule, schedule_id);
+      return db.Actual_Schedule.destroy({ where: {schedule_id: schedule_id} })
+      .then(() => {
+        return Promise.each(reformattedSchedule, (scheduleObj) => {
+          return db.Actual_Schedule.create(scheduleObj);
+        })
+        .then(() => {
+          return reformattedSchedule;
         });
-      });
+      })
+    });
+  });
 }
 module.exports.generateSchedule = generateSchedule;
 //scheduleGenerator is exported for testing puroposes only
