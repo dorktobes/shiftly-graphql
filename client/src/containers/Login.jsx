@@ -4,6 +4,9 @@ import { bindActionCreators } from 'redux';
 import { changeView, login } from '../actions/index';
 import PropTypes from 'prop-types';
 
+import { graphql } from 'react-apollo';
+import mutation from '../mutations/Login';
+
 const Login = props => (
   <div className="credentials clear-fix">
     <h4>Login</h4>
@@ -23,9 +26,24 @@ const Login = props => (
           value="Login" 
           onClick={
             () => {
-              let username = document.getElementById('username').value;
+              let name = document.getElementById('username').value;
               let password = document.getElementById('password').value;
-              props.login({ username, password });
+              props.mutate({
+                variables: {
+                  name,
+                  password,
+                }
+              })
+              .then((user) => {
+                console.log('welcome back,', user.data.login.name);
+                props.changeView('employeeEditor');
+
+
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+              // props.login({ username, password });
               document.getElementById('username').value = '';
               document.getElementById('password').value = '';
             }
@@ -37,11 +55,11 @@ const Login = props => (
 );
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ login }, dispatch);
+  return bindActionCreators({ changeView }, dispatch);
 }
 
 Login.propTypes = {
-  login: PropTypes.func.isRequired,
+  changeView: PropTypes.func.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default graphql(mutation)(connect(null, mapDispatchToProps)(Login));

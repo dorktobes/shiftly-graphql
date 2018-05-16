@@ -1,4 +1,4 @@
-const employeeAvailabilities = (state = null, action) => {
+const employeeAvailabilities = (state = [], action) => {
   switch (action.type) {
     case 'GET_EMPLOYEE_AVAILABILITIES':
       return action.payload.data;

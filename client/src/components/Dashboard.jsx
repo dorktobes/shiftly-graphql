@@ -19,6 +19,7 @@ import ScheduleActual from './ScheduleActual.jsx';
 
 class Dashboard extends Component {
   constructor(props) {
+    console.log('in dashboard');
     super(props);
     this.state = {
       currentView: 'scheduleEditor',

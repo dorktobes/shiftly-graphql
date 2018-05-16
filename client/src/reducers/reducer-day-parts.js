@@ -1,4 +1,4 @@
-const dayParts = (state = null, action) => {
+const dayParts = (state = [], action) => {
   switch (action.type) {
     case 'GET_DAY_PARTS':
       return action.payload.data;
